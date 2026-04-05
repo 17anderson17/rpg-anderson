@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Saúde - Dr Anderson Politi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .patient-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .patient-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .patient-avatar {
+            font-size: 80px;
+            margin-bottom: 15px;
+        }
+
+        .patient-age {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .health-metrics {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+        }
+
+        .metric {
+            margin-bottom: 20px;
+        }
+
+        .metric-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .metric-value {
+            color: #667eea;
+            font-size: 18px;
+        }
+
+        .metric-bar {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #667eea;
+        }
+
+        .metric-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .metric-status {
+            font-size: 12px;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+
+        .status-good {
+            color: #28a745;
+        }
+
+        .status-warning {
+            color: #ffc107;
+        }
+
+        .status-danger {
+            color: #dc3545;
+        }
+
+        .actions {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .actions h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .action-btn {
+            background: white;
+            border: 2px solid #667eea;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            color: #667eea;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .action-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .action-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .action-icon {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .timeline {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .timeline h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .day-info {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 10px;
+        }
+
+        .day-number {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .day-events {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            text-align: center;
+            animation: popIn 0.3s ease-out;
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-content h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 28px;
+        }
+
+        .modal-content p {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .big-emoji {
+            font-size: 60px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .action-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>❤️ SIMULADOR DE SAÚDE</h1>
+        <p>Com Dr Anderson Politi - Gerencie a Saúde do Seu Paciente</p>
+    </div>
+
+    <div class="main-content">
+        <div class="patient-card">
+            <div class="patient-avatar">👨‍⚕️</div>
+            <div class="patient-name" id="patientName">João Silva</div>
+            <div class="patient-age" id="patientAge">45 anos</div>
+            <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px;">
+                <p style="font-size: 12px; margin-bottom: 10px;">Saúde Geral</p>
+                <div style="font-size: 32px; font-weight: bold;" id="healthScore">75%</div>
+            </div>
+        </div>
+
+        <div class="health-metrics">
+            <div class="metric">
+                <div class="metric-label">
+                    <span>Pressão Arterial</span>
+                    <span class="metric-value" id="pressureValue">120/80</span>
+                </div>
+                <div class="metric-bar">
+                    <div class="metric-fill" id="pressureFill" style="width: 75%;"></div>
+                </div>
+                <div class="metric-status status-good" id="pressureStatus">✓ Normal</div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">
+                    <span>Colesterol</span>
+                    <span class="metric-value" id="cholesterolValue">180</span>
+                </div>
+                <div class="metric-bar">
+                    <div class="metric-fill" id="cholesterolFill" style="width: 70%;"></div>
+                </div>
+                <div class="metric-status status-good" id="cholesterolStatus">✓ Normal</div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">
+                    <span>Peso</span>
+                    <span class="metric-value" id="weightValue">80 kg</span>
+                </div>
+                <div class="metric-bar">
+                    <div class="metric-fill" id="weightFill" style="width: 65%;"></div>
+                </div>
+                <div class="metric-status status-good" id="weightStatus">✓ Normal</div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">
+                    <span>Stress</span>
+                    <span class="metric-value" id="stressValue">40%</span>
+                </div>
+                <div class="metric-bar">
+                    <div class="metric-fill" id="stressFill" style="width: 40%;"></div>
+                </div>
+                <div class="metric-status status-good" id="stressStatus">✓ Baixo</div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">
+                    <span>Energia</span>
+                    <span class="metric-value" id="energyValue">70%</span>
+                </div>
+                <div class="metric-bar">
+                    <div class="metric-fill" id="energyFill" style="width: 70%;"></div>
+                </div>
+                <div class="metric-status status-good" id="energyStatus">✓ Boa</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="actions">
+        <h3>🎯 Escolha uma Ação para Hoje:</h3>
+        <div class="action-grid">
+            <button class="action-btn" onclick="performAction('exercise')">
+                <div class="action-icon">🏃</div>
+                <div>Exercitar</div>
+            </button>
+            <button class="action-btn" onclick="performAction('healthy')">
+                <div class="action-icon">🥗</div>
+                <div>Comer Saudável</div>
+            </button>
+            <button class="action-btn" onclick="performAction('sleep')">
+                <div class="action-icon">😴</div>
+                <div>Dormir Bem</div>
+            </button>
+            <button class="action-btn" onclick="performAction('meditate')">
+                <div class="action-icon">🧘</div>
+                <div>Meditar</div>
+            </button>
+            <button class="action-btn" onclick="performAction('junk')">
+                <div class="action-icon">🍔</div>
+                <div>Comer Junk Food</div>
+            </button>
+            <button class="action-btn" onclick="performAction('stress')">
+                <div class="action-icon">😰</div>
+                <div>Ficar Estressado</div>
+            </button>
+        </div>
+    </div>
+
+    <div class="timeline">
+        <h3>📅 Histórico dos Últimos Dias:</h3>
+        <div id="timelineContainer"></div>
+    </div>
+
+    <div class="controls">
+        <button class="btn-primary" onclick="nextDay()">➡️ Próximo Dia</button>
+        <button class="btn-secondary" onclick="resetGame()">🔄 Novo Paciente</button>
+    </div>
+</div>
+
+<!-- Modal de Resultado -->
+<div class="modal" id="resultModal">
+    <div class="modal-content">
+        <div class="big-emoji" id="resultEmoji">✓</div>
+        <h2 id="resultTitle">Ótimo!</h2>
+        <p id="resultMessage"></p>
+        <button class="btn-primary" onclick="closeModal()" style="width: 100%; margin-top: 20px;">Continuar</button>
+    </div>
+</div>
+
+<!-- Modal de Game Over -->
+<div class="modal" id="gameOverModal">
+    <div class="modal-content">
+        <div class="big-emoji">⚠️</div>
+        <h2>Saúde Crítica!</h2>
+        <p id="gameOverMessage"></p>
+        <button class="btn-primary" onclick="resetGame()" style="width: 100%; margin-top: 20px;">Começar Novamente</button>
+    </div>
+</div>
+
+<script>
+    // Estado do jogo
+    let gameState = {
+        day: 1,
+        pressure: 120,
+        cholesterol: 180,
+        weight: 80,
+        stress: 40,
+        energy: 70,
+        history: []
+    };
+
+    const idealValues = {
+        pressure: 120,
+        cholesterol: 200,
+        weight: 75,
+        stress: 30,
+        energy: 100
+    };
+
+    function updateDisplay() {
+        // Pressão Arterial
+        document.getElementById('pressureValue').textContent = gameState.pressure + '/80';
+        const pressurePercent = Math.max(0, Math.min(100, 100 - Math.abs(gameState.pressure - 120) * 0.5));
+        document.getElementById('pressureFill').style.width = pressurePercent + '%';
+        updateStatus('pressure', pressurePercent);
+
+        // Colesterol
+        document.getElementById('cholesterolValue').textContent = gameState.cholesterol;
+        const cholesterolPercent = Math.max(0, Math.min(100, 100 - Math.abs(gameState.cholesterol - 200) * 0.3));
+        document.getElementById('cholesterolFill').style.width = cholesterolPercent + '%';
+        updateStatus('cholesterol', cholesterolPercent);
+
+        // Peso
+        document.getElementById('weightValue').textContent = gameState.weight + ' kg';
+        const weightPercent = Math.max(0, Math.min(100, 100 - Math.abs(gameState.weight - 75) * 2));
+        document.getElementById('weightFill').style.width = weightPercent + '%';
+        updateStatus('weight', weightPercent);
+
+        // Stress
+        document.getElementById('stressValue').textContent = gameState.stress + '%';
+        const stressPercent = Math.max(0, 100 - gameState.stress);
+        document.getElementById('stressFill').style.width = gameState.stress + '%';
+        updateStatus('stress', stressPercent);
+
+        // Energia
+        document.getElementById('energyValue').textContent = gameState.energy + '%';
+        document.getElementById('energyFill').style.width = gameState.energy + '%';
+        updateStatus('energy', gameState.energy);
+
+        // Saúde Geral
+        const healthScore = Math.round((pressurePercent + cholesterolPercent + weightPercent + stressPercent + gameState.energy) / 5);
+        document.getElementById('healthScore').textContent = healthScore + '%';
+
+        // Verificar game over
+        if (healthScore < 20) {
+            document.getElementById('gameOverMessage').textContent = 'O paciente desenvolveu problemas graves de saúde! Você precisa tomar melhores decisões.';
+            document.getElementById('gameOverModal').classList.add('show');
+        }
+    }
+
+    function updateStatus(metric, percent) {
+        const statusEl = document.getElementById(metric + 'Status');
+        if (percent >= 70) {
+            statusEl.className = 'metric-status status-good';
+            statusEl.textContent = '✓ Normal';
+        } else if (percent >= 40) {
+            statusEl.className = 'metric-status status-warning';
+            statusEl.textContent = '⚠ Atenção';
+        } else {
+            statusEl.className = 'metric-status status-danger';
+            statusEl.textContent = '✗ Crítico';
+        }
+    }
+
+    function performAction(action) {
+        let message = '';
+        let emoji = '';
+
+        switch(action) {
+            case 'exercise':
+                gameState.pressure -= 5;
+                gameState.cholesterol -= 10;
+                gameState.weight -= 1;
+                gameState.stress -= 15;
+                gameState.energy += 10;
+                message = 'Excelente! O exercício reduziu a pressão e o stress do paciente!';
+                emoji = '💪';
+                break;
+            case 'healthy':
+                gameState.cholesterol -= 15;
+                gameState.weight -= 0.5;
+                gameState.energy += 5;
+                gameState.stress -= 5;
+                message = 'Ótimo! Uma alimentação saudável melhora o colesterol!';
+                emoji = '🥗';
+                break;
+            case 'sleep':
+                gameState.stress -= 20;
+                gameState.energy += 20;
+                gameState.pressure -= 3;
+                message = 'Perfeito! Um bom sono recupera a energia e reduz o stress!';
+                emoji = '😴';
+                break;
+            case 'meditate':
+                gameState.stress -= 25;
+                gameState.energy += 10;
+                gameState.pressure -= 5;
+                message = 'Ótimo! A meditação acalma a mente e reduz a pressão!';
+                emoji = '🧘';
+                break;
+            case 'junk':
+                gameState.cholesterol += 20;
+                gameState.weight += 1;
+                gameState.energy -= 10;
+                message = 'Cuidado! Junk food prejudica a saúde do paciente!';
+                emoji = '⚠️';
+                break;
+            case 'stress':
+                gameState.stress += 30;
+                gameState.pressure += 10;
+                gameState.energy -= 15;
+                message = 'Não! O stress prejudica muito a saúde cardíaca!';
+                emoji = '😰';
+                break;
+        }
+
+        // Limitar valores
+        gameState.pressure = Math.max(100, Math.min(160, gameState.pressure));
+        gameState.cholesterol = Math.max(100, Math.min(300, gameState.cholesterol));
+        gameState.weight = Math.max(60, Math.min(100, gameState.weight));
+        gameState.stress = Math.max(0, Math.min(100, gameState.stress));
+        gameState.energy = Math.max(0, Math.min(100, gameState.energy));
+
+        // Registrar no histórico
+        gameState.history.push({
+            day: gameState.day,
+            action: action,
+            message: message
+        });
+
+        updateDisplay();
+        showResult(emoji, message);
+    }
+
+    function showResult(emoji, message) {
+        document.getElementById('resultEmoji').textContent = emoji;
+        document.getElementById('resultMessage').textContent = message;
+        document.getElementById('resultModal').classList.add('show');
+    }
+
+    function closeModal() {
+        document.getElementById('resultModal').classList.remove('show');
+    }
+
+    function nextDay() {
+        gameState.day++;
+        updateTimeline();
+    }
+
+    function updateTimeline() {
+        const container = document.getElementById('timelineContainer');
+        container.innerHTML = '';
+
+        const recentHistory = gameState.history.slice(-5).reverse();
+        recentHistory.forEach(entry => {
+            const dayDiv = document.createElement('div');
+            dayDiv.className = 'day-info';
+            dayDiv.innerHTML = `
+                <div class="day-number">Dia ${entry.day}</div>
+                <div class="day-events">${entry.message}</div>
+            `;
+            container.appendChild(dayDiv);
+        });
+    }
+
+    function resetGame() {
+        document.getElementById('gameOverModal').classList.remove('show');
+        gameState = {
+            day: 1,
+            pressure: 120,
+            cholesterol: 180,
+            weight: 80,
+            stress: 40,
+            energy: 70,
+            history: []
+        };
+        updateDisplay();
+        updateTimeline();
+    }
+
+    // Inicializar
+    updateDisplay();
+    updateTimeline();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Dr Anderson Politi - Saúde em Ação</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- TELA DE ESCOLHA DE MODO -->
+  <div id="modeSelection">
+    <h2>Dr Anderson Politi - Saúde em Ação</h2>
+    <p>Combine hábitos saudáveis para ganhar pontos e evite os hábitos ruins que tiram pontos.</p>
+
+    <div class="mode-buttons">
+      <button id="endlessMode">Modo Infinito</button>
+      <button id="timedMode">Modo Cronometrado</button>
+    </div>
+
+    <small>
+      Arraste os ícones para formar linhas de 3 ou 4 iguais.
+      Hábitos saudáveis somam pontos, hábitos ruins subtraem.
+    </small>
+  </div>
+
+  <!-- PLACAR -->
+  <div class="scoreBoard">
+    <h3>Dr Anderson Politi</h3>
+    <h1>Saúde em Ação</h1>
+
+    <div class="scores">
+      <span>Pontos:</span>
+      <span id="score">0</span>
+    </div>
+
+    <div id="timer"></div>
+
+    <button id="changeMode">Trocar Modo</button>
+  </div>
+
+  <!-- TABULEIRO DO JOGO -->
+  <div class="grid"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

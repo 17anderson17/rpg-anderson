@@ -1,401 +1,46 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Como Evitar Infarto com as Dicas do Dr. Anderson</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1a472a 0%, #0d2818 100%);
-            color: #eee;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: rgba(0, 0, 0, 0.7);
-            border: 2px solid #ff6b6b;
-            border-radius: 10px;
-            padding: 40px;
-            max-width: 700px;
-            width: 100%;
-            box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
-        }
-
-        h1 {
-            color: #ff6b6b;
-            margin-bottom: 10px;
-            text-align: center;
-            text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
-            font-size: 24px;
-        }
-
-        .subtitle {
-            color: #4ecdc4;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 30px;
-            padding: 15px;
-            background: rgba(255, 107, 107, 0.1);
-            border-radius: 5px;
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-label {
-            color: #4ecdc4;
-            font-size: 12px;
-            text-transform: uppercase;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #fff;
-        }
-
-        #story {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            border-left: 3px solid #ff6b6b;
-            margin-bottom: 30px;
-            line-height: 1.8;
-            min-height: 150px;
-            border-radius: 5px;
-        }
-
-        .choices {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        button {
-            padding: 12px 20px;
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-            transition: all 0.3s;
-            text-align: left;
-        }
-
-        button:hover {
-            transform: translateX(5px);
-            box-shadow: 0 0 15px rgba(255, 107, 107, 0.5);
-            background: linear-gradient(135deg, #ff8787 0%, #ff6b6b 100%);
-        }
-
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        button:active {
-            transform: translateX(3px);
-        }
-
-        .game-over {
-            color: #ff4444;
-            font-size: 24px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .victory {
-            color: #44ff44;
-            font-size: 24px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .health-bar {
-            width: 100%;
-            height: 20px;
-            background: #333;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 5px;
-        }
-
-        .health-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #ff6b6b, #ff8787);
-            transition: width 0.3s;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Dr Anderson - Saúde em Ação</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>❤️ COMO EVITAR INFARTO</h1>
-        <div class="subtitle">Com as Dicas do Dr. Anderson</div>
 
-        <div class="stats">
-            <div class="stat">
-                <div class="stat-label">Saúde do Coração</div>
-                <div class="stat-value" id="health">100</div>
-                <div class="health-bar">
-                    <div class="health-fill" id="healthBar" style="width: 100%"></div>
-                </div>
-            </div>
-            <div class="stat">
-                <div class="stat-label">Conhecimento</div>
-                <div class="stat-value" id="knowledge">0</div>
-            </div>
-            <div class="stat">
-                <div class="stat-label">Dia</div>
-                <div class="stat-value" id="day">1</div>
-            </div>
-        </div>
+  <!-- TELA DE ESCOLHA DE MODO -->
+  <div id="modeSelection">
+    <h2>Dr Anderson - Saúde em Ação</h2>
+    <p>Combine hábitos saudáveis para ganhar pontos. Evite os hábitos ruins!</p>
 
-        <div id="story"></div>
-        <div id="gameStatus"></div>
-        <div class="choices" id="choices"></div>
+    <div class="mode-buttons">
+      <button id="endlessMode">Modo Infinito</button>
+      <button id="timedMode">Modo Cronometrado</button>
     </div>
 
-    <script>
-        const game = {
-            health: 100,
-            maxHealth: 100,
-            knowledge: 0,
-            day: 1,
-            tips_learned: 0,
-            currentScene: 'start'
-        };
+    <small>
+      Arraste os ícones para fazer combinações de 3 ou 4 em linha.
+      Boas práticas dão pontos, práticas ruins tiram pontos.
+    </small>
+  </div>
 
-        const scenes = {
-            start: {
-                text: `Olá! Bem-vindo ao consultório do Dr. Anderson! 🏥\n\nVocê chegou aqui porque está preocupado com sua saúde cardíaca. Seu coração está pedindo ajuda!\n\nEu sou o Dr. Anderson, e vou te ensinar as melhores dicas para evitar um infarto. Você está pronto para aprender?`,
-                choices: [
-                    { text: '✅ Sim! Quero aprender tudo sobre saúde do coração', next: 'consultation' },
-                    { text: '❓ Primeiro, me explica por que preciso disso?', next: 'explanation' },
-                    { text: '🚪 Não, vou embora', next: 'leave' }
-                ]
-            },
+  <!-- PLACAR E INFORMAÇÕES -->
+  <div class="scoreBoard">
+    <h3>Dr Anderson</h3>
+    <h1>Saúde em Ação</h1>
 
-            explanation: {
-                text: `"Ótima pergunta!" diz o Dr. Anderson.\n\n"O infarto é quando o fluxo de sangue para o coração é bloqueado. É a principal causa de morte no Brasil. Mas a boa notícia é: 80% dos infartos podem ser prevenidos com hábitos saudáveis!"\n\n"Vamos começar?"`,
-                choices: [
-                    { text: '✅ Vamos! Me ensina as dicas', next: 'consultation' },
-                    { text: '🚪 Não, vou embora mesmo', next: 'leave' }
-                ]
-            },
+    <div class="scores">
+      <span>Pontos:</span>
+      <span id="score">0</span>
+    </div>
 
-            consultation: {
-                text: `"Perfeito!" diz o Dr. Anderson, sentando em sua cadeira.\n\n"Vou te apresentar 5 dicas essenciais para proteger seu coração. A cada dia, você vai aprender uma nova dica e colocar em prática."\n\n"Qual dica você quer aprender primeiro?"`,
-                choices: [
-                    { text: '🏃 Dica 1: A Importância do Exercício Físico', next: 'tip_exercise' },
-                    { text: '🥗 Dica 2: Alimentação Saudável', next: 'tip_food' },
-                    { text: '😴 Dica 3: Qualidade do Sono', next: 'tip_sleep' },
-                    { text: '🚭 Dica 4: Parar de Fumar', next: 'tip_smoking' }
-                ]
-            },
+    <div id="timer"></div>
 
-            tip_exercise: {
-                text: `"A primeira dica é EXERCÍCIO FÍSICO!" explica o Dr. Anderson.\n\n"Você precisa de pelo menos 150 minutos de atividade moderada por semana. Pode ser caminhada, natação, bicicleta... O importante é mexer o corpo!"\n\n"Exercício reduz a pressão arterial, controla o peso e fortalece o coração. É como um treino para seu coração ficar mais resistente."\n\n"Você está disposto a começar a se exercitar?"`,
-                choices: [
-                    { text: '✅ Vou começar a caminhar 30 min por dia', next: 'exercise_commitment', action: () => { game.knowledge += 20; game.tips_learned += 1; } },
-                    { text: '🤔 Vou pensar sobre isso', next: 'consultation', action: () => { game.knowledge += 5; } },
-                    { text: '❌ Exercício não é para mim', next: 'consultation', action: () => { game.health -= 10; } }
-                ]
-            },
+    <button id="changeMode">Trocar Modo</button>
+  </div>
 
-            exercise_commitment: {
-                text: `"Excelente decisão!" comemora o Dr. Anderson.\n\nVocê começa a caminhar 30 minutos todos os dias. Nos primeiros dias é cansativo, mas depois você sente a energia aumentar.\n\nSeu coração está mais forte! 💪`,
-                choices: [
-                    { text: '➡️ Continuar', next: 'day_pass', action: () => { game.health += 15; game.day += 1; } }
-                ]
-            },
+  <!-- TABULEIRO DO JOGO -->
+  <div class="grid"></div>
 
-            tip_food: {
-                text: `"A segunda dica é ALIMENTAÇÃO SAUDÁVEL!" diz o Dr. Anderson, mostrando uma pirâmide alimentar.\n\n"Você precisa comer mais frutas, verduras, grãos integrais e peixes. Menos sal, menos açúcar, menos gordura saturada."\n\n"Alimentos ruins para o coração: refrigerante, frituras, carnes vermelhas em excesso, alimentos ultraprocessados."\n\n"Alimentos bons: maçã, abóbora, brócolis, salmão, azeite de oliva, aveia."\n\n"Você vai mudar sua alimentação?"`,
-                choices: [
-                    { text: '✅ Vou começar a comer mais saudável', next: 'food_commitment', action: () => { game.knowledge += 20; game.tips_learned += 1; } },
-                    { text: '🤔 Vou tentar reduzir um pouco', next: 'consultation', action: () => { game.knowledge += 5; } },
-                    { text: '❌ Adoro comida ruim, não vou mudar', next: 'consultation', action: () => { game.health -= 15; } }
-                ]
-            },
-
-            food_commitment: {
-                text: `Você muda sua alimentação. No início é difícil, mas logo você percebe que se sente melhor, com mais energia.\n\nSeu colesterol diminui, sua pressão arterial melhora. Seu coração agradece! 🥗`,
-                choices: [
-                    { text: '➡️ Continuar', next: 'day_pass', action: () => { game.health += 15; game.day += 1; } }
-                ]
-            },
-
-            tip_sleep: {
-                text: `"A terceira dica é QUALIDADE DO SONO!" explica o Dr. Anderson.\n\n"Você precisa dormir entre 7 e 9 horas por noite. Durante o sono, seu coração descansa e se recupera."\n\n"Dicas para dormir melhor:\n- Deitar sempre no mesmo horário\n- Evitar celular 1 hora antes de dormir\n- Quarto escuro e fresco\n- Evitar café à noite\n- Fazer relaxamento antes de dormir"\n\n"Você vai melhorar seu sono?"`,
-                choices: [
-                    { text: '✅ Vou dormir 8 horas todas as noites', next: 'sleep_commitment', action: () => { game.knowledge += 20; game.tips_learned += 1; } },
-                    { text: '🤔 Vou tentar dormir um pouco mais', next: 'consultation', action: () => { game.knowledge += 5; } },
-                    { text: '❌ Durmo pouco e não vou mudar', next: 'consultation', action: () => { game.health -= 10; } }
-                ]
-            },
-
-            sleep_commitment: {
-                text: `Você começa a dormir 8 horas por noite. Nos primeiros dias é estranho, mas logo você sente a diferença.\n\nVocê acorda mais descansado, com mais disposição. Seu coração recupera as energias! 😴`,
-                choices: [
-                    { text: '➡️ Continuar', next: 'day_pass', action: () => { game.health += 10; game.day += 1; } }
-                ]
-            },
-
-            tip_smoking: {
-                text: `"A quarta dica é PARAR DE FUMAR!" diz o Dr. Anderson com seriedade.\n\n"O cigarro é um dos piores inimigos do coração. Cada cigarro aumenta a pressão arterial e danifica as artérias."\n\n"Se você fuma, precisa parar. Existem tratamentos, medicamentos e grupos de apoio para ajudar."\n\n"Você está fumando?"`,
-                choices: [
-                    { text: '✅ Sim, e vou parar agora', next: 'smoking_quit', action: () => { game.knowledge += 25; game.tips_learned += 1; } },
-                    { text: '❌ Não fumo', next: 'consultation', action: () => { game.knowledge += 10; } },
-                    { text: '🤔 Fumo, mas não vou parar', next: 'consultation', action: () => { game.health -= 20; } }
-                ]
-            },
-
-            smoking_quit: {
-                text: `"Parabéns! Essa é a melhor decisão que você pode tomar!" comemora o Dr. Anderson.\n\nOs primeiros dias são difíceis, mas depois fica mais fácil. Seus pulmões começam a se recuperar, sua pressão arterial diminui.\n\nSeu coração respira aliviado! 🚭`,
-                choices: [
-                    { text: '➡️ Continuar', next: 'day_pass', action: () => { game.health += 20; game.day += 1; } }
-                ]
-            },
-
-            day_pass: {
-                text: `Dias se passam. Você está seguindo as dicas do Dr. Anderson com dedicação.\n\nSeu corpo está mudando. Você se sente mais energético, mais saudável, mais feliz.\n\n"Como você está se sentindo?" pergunta o Dr. Anderson.`,
-                choices: [
-                    { text: '😊 Muito melhor! Quero aprender mais dicas', next: 'final_tips' },
-                    { text: '🏥 Vou fazer exames para ver meu progresso', next: 'checkup' }
-                ]
-            },
-
-            checkup: {
-                text: `Você faz exames completos no consultório do Dr. Anderson.\n\nOs resultados chegam:\n\n✅ Pressão arterial: NORMAL\n✅ Colesterol: CONTROLADO\n✅ Frequência cardíaca: SAUDÁVEL\n✅ Índice de massa corporal: IDEAL\n\n"Você está excelente!" diz o Dr. Anderson com um sorriso. "Seus hábitos saudáveis estão funcionando!"`,
-                choices: [
-                    { text: '🎉 Que alívio! Quero aprender a dica final', next: 'final_tips' }
-                ]
-            },
-
-            final_tips: {
-                text: `"Agora vou te dar a DICA FINAL e mais importante," diz o Dr. Anderson.\n\n"CONTROLE DO STRESS! O stress crônico é um grande vilão para o coração."\n\n"Técnicas para controlar o stress:\n- Meditação (10 minutos por dia)\n- Yoga\n- Respiração profunda\n- Passar tempo com família\n- Hobbies e atividades que você gosta\n- Terapia se necessário"\n\n"Você vai começar a controlar seu stress?"`,
-                choices: [
-                    { text: '✅ Vou meditar todos os dias', next: 'stress_control', action: () => { game.knowledge += 25; game.tips_learned += 1; } },
-                    { text: '🤔 Vou tentar relaxar mais', next: 'stress_control', action: () => { game.knowledge += 15; } }
-                ]
-            },
-
-            stress_control: {
-                text: `Você começa a meditar e relaxar todos os dias. Seu corpo inteiro fica mais calmo.\n\nSeu coração bate com mais tranquilidade. Você dorme melhor, trabalha melhor, vive melhor.\n\nVocê finalmente entendeu: saúde não é apenas ausência de doença, é qualidade de vida! ✨`,
-                choices: [
-                    { text: '➡️ Continuar', next: 'victory', action: () => { game.health = 100; game.day += 30; } }
-                ]
-            },
-
-            leave: {
-                text: `Você sai do consultório do Dr. Anderson.\n\nDias se passam... Você continua com os mesmos hábitos ruins.\n\nUm dia, você sente uma dor no peito. Seu coração está pedindo ajuda.\n\nVocê deveria ter ouvido o Dr. Anderson...`,
-                choices: [
-                    { text: '🏥 Voltar ao consultório', next: 'start' },
-                    { text: '💀 Fim de jogo', next: 'game_over' }
-                ]
-            },
-
-            victory: {
-                text: `🎉 PARABÉNS! VOCÊ VENCEU! 🎉\n\nVocê aprendeu todas as 5 dicas do Dr. Anderson:\n1. ✅ Exercício Físico\n2. ✅ Alimentação Saudável\n3. ✅ Qualidade do Sono\n4. ✅ Parar de Fumar\n5. ✅ Controle do Stress\n\nSeu coração está saudável e forte! Você viverá muitos anos com qualidade de vida.\n\nEstátísticas finais:\n- Saúde do Coração: ${game.health}%\n- Conhecimento: ${game.knowledge}\n- Dicas Aprendidas: ${game.tips_learned}/5\n- Dias de Jogo: ${game.day}`,
-                choices: [
-                    { text: '🔄 Jogar novamente', next: 'start', action: () => { 
-                        game.health = 100;
-                        game.knowledge = 0;
-                        game.day = 1;
-                        game.tips_learned = 0;
-                    } }
-                ]
-            },
-
-            game_over: {
-                text: `Você não ouviu as dicas do Dr. Anderson a tempo.\n\nSeu coração não resistiu.\n\nMas não se desespere! A vida oferece segunda chances. Volte e aprenda com o Dr. Anderson!`,
-                choices: [
-                    { text: '🔄 Tentar novamente', next: 'start', action: () => { 
-                        game.health = 100;
-                        game.knowledge = 0;
-                        game.day = 1;
-                        game.tips_learned = 0;
-                    } }
-                ]
-            }
-        };
-
-        function updateStats() {
-            document.getElementById('health').textContent = Math.max(0, game.health);
-            document.getElementById('knowledge').textContent = game.knowledge;
-            document.getElementById('day').textContent = game.day;
-
-            const healthPercent = Math.max(0, Math.min(100, game.health));
-            document.getElementById('healthBar').style.width = healthPercent + '%';
-        }
-
-        function showScene(sceneKey) {
-            const scene = scenes[sceneKey];
-            if (!scene) return;
-
-            game.currentScene = sceneKey;
-
-            document.getElementById('story').textContent = scene.text;
-            document.getElementById('gameStatus').innerHTML = '';
-
-            if (game.health <= 0) {
-                document.getElementById('gameStatus').innerHTML = '<div class="game-over">💀 SEU CORAÇÃO NÃO RESISTIU!</div>';
-                showScene('game_over');
-                return;
-            }
-
-            const choicesDiv = document.getElementById('choices');
-            choicesDiv.innerHTML = '';
-
-            scene.choices.forEach((choice, index) => {
-                const button = document.createElement('button');
-
-                const isDisabled = choice.condition && !choice.condition();
-
-                if (isDisabled) {
-                    button.textContent = choice.text + ' (indisponível)';
-                    button.disabled = true;
-                } else {
-                    button.textContent = choice.text;
-                    button.onclick = () => {
-                        if (choice.action) choice.action();
-
-                        let nextScene = choice.next;
-                        if (typeof nextScene === 'function') {
-                            nextScene = nextScene();
-                        }
-
-                        updateStats();
-                        showScene(nextScene);
-                    };
-                }
-
-                choicesDiv.appendChild(button);
-            });
-
-            updateStats();
-        }
-
-        showScene('start');
-    </script>
+  <script src="script.js"></script>
 </body>
 </html>

@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function candyCrushGame() {
+  // Elementos do DOM
   const grid = document.querySelector(".grid");
   const scoreDisplay = document.getElementById("score");
   const timerDisplay = document.getElementById("timer");
@@ -11,6 +12,7 @@ function candyCrushGame() {
   const timedButton = document.getElementById("timedMode");
   const changeModeButton = document.getElementById("changeMode");
 
+  // Estado do jogo
   const width = 8;
   const squares = [];
   let score = 0;
@@ -19,7 +21,7 @@ function candyCrushGame() {
   let gameInterval = null;
   let timerInterval = null;
 
-  // Ícones de hábitos saudáveis (bons) e não saudáveis (ruins)
+  // Ícones de hábitos saudáveis (bons) e não saudáveis (ruins) – usando Twemoji
   const healthyIcons = [
     "url(https://twemoji.maxcdn.com/v/latest/svg/1f34e.svg)", // maçã
     "url(https://twemoji.maxcdn.com/v/latest/svg/1f34a.svg)", // laranja
@@ -34,19 +36,19 @@ function candyCrushGame() {
     "url(https://twemoji.maxcdn.com/v/latest/svg/1f35f.svg)", // batata frita
     "url(https://twemoji.maxcdn.com/v/latest/svg/1f37f.svg)", // pipoca
     "url(https://twemoji.maxcdn.com/v/latest/svg/1f37b.svg)", // bebida alcoólica
-    "url(https://twemoji.maxcdn.com/v/latest/svg/1f37d.svg)", // prato cheio/gordura
+    "url(https://twemoji.maxcdn.com/v/latest/svg/1f37d.svg)", // prato gorduroso
     "url(https://twemoji.maxcdn.com/v/latest/svg/1f6ac.svg)"  // cigarro
   ];
 
-  // Array geral, misturando bons e ruins
+  // Array geral
   const allIcons = healthyIcons.concat(unhealthyIcons);
 
-  // Map para saber se um ícone é bom ou ruim (pelo índice no array allIcons)
+  // Saber se um índice é de item saudável ou não
   function isHealthy(index) {
-    return index < healthyIcons.length;
+    return index < healthyIcons.length; // primeiros são saudáveis
   }
 
-  // Cria o tabuleiro
+  // Criar tabuleiro
   function createBoard() {
     grid.innerHTML = "";
     squares.length = 0;
@@ -56,12 +58,13 @@ function candyCrushGame() {
       square.setAttribute("draggable", true);
       square.setAttribute("id", i);
       const randomIndex = Math.floor(Math.random() * allIcons.length);
-      square.dataset.iconIndex = randomIndex; // guarda qual ícone está ali
+      square.dataset.iconIndex = randomIndex;
       square.style.backgroundImage = allIcons[randomIndex];
       grid.appendChild(square);
       squares.push(square);
     }
 
+    // Eventos de arrastar
     squares.forEach(square => square.addEventListener("dragstart", dragStart));
     squares.forEach(square => square.addEventListener("dragend", dragEnd));
     squares.forEach(square => square.addEventListener("dragover", dragOver));
@@ -70,7 +73,10 @@ function candyCrushGame() {
     squares.forEach(square => square.addEventListener("drop", dragDrop));
   }
 
-  let colorBeingDragged, colorBeingReplaced, squareIdBeingDragged, squareIdBeingReplaced, indexBeingDragged, indexBeingReplaced;
+  // Drag and Drop
+  let colorBeingDragged, colorBeingReplaced;
+  let squareIdBeingDragged, squareIdBeingReplaced;
+  let indexBeingDragged, indexBeingReplaced;
 
   function dragStart() {
     colorBeingDragged = this.style.backgroundImage;
@@ -101,19 +107,19 @@ function candyCrushGame() {
   }
 
   function dragEnd() {
-    let validMoves = [
+    const validMoves = [
       squareIdBeingDragged - 1,
       squareIdBeingDragged - width,
       squareIdBeingDragged + 1,
       squareIdBeingDragged + width
     ];
-    let validMove = validMoves.includes(squareIdBeingReplaced);
+    const validMove = validMoves.includes(squareIdBeingReplaced);
 
     if (squareIdBeingReplaced !== null && validMove) {
       squareIdBeingReplaced = null;
     } else {
-      // volta ao original
       if (squareIdBeingReplaced !== null) {
+        // Reverte se inválido
         squares[squareIdBeingReplaced].style.backgroundImage = colorBeingReplaced;
         squares[squareIdBeingReplaced].dataset.iconIndex = indexBeingReplaced;
 
@@ -123,8 +129,9 @@ function candyCrushGame() {
     }
   }
 
-  // Faz “cair” os ícones
+  // “Queda” das peças
   function moveIntoSquareBelow() {
+    // Primeira linha
     for (let i = 0; i < width; i++) {
       if (squares[i].style.backgroundImage === "") {
         const randomIndex = Math.floor(Math.random() * allIcons.length);
@@ -133,6 +140,7 @@ function candyCrushGame() {
       }
     }
 
+    // Restante
     for (let i = 0; i < width * (width - 1); i++) {
       if (squares[i + width].style.backgroundImage === "") {
         squares[i + width].style.backgroundImage = squares[i].style.backgroundImage;
@@ -143,8 +151,7 @@ function candyCrushGame() {
     }
   }
 
-  // FUNÇÕES DE MATCH – AGORA COM PONTOS POSITIVOS E NEGATIVOS
-
+  // Lida com pontuação de um conjunto
   function handleMatch(indices) {
     if (!indices.length) return;
 
@@ -152,35 +159,37 @@ function candyCrushGame() {
     const iconIndex = parseInt(first.dataset.iconIndex);
     if (isNaN(iconIndex)) return;
 
+    const decidedImage = first.style.backgroundImage;
+    const isBlank = decidedImage === "";
+
     const allSame = indices.every(index => {
       const sq = squares[index];
-      return (
-        sq.style.backgroundImage === first.style.backgroundImage &&
-        sq.style.backgroundImage !== ""
-      );
+      return sq.style.backgroundImage === decidedImage && sq.style.backgroundImage !== "";
     });
 
-    if (!allSame) return;
+    if (!allSame || isBlank) return;
 
     const qtd = indices.length;
-    // Se for hábito saudável: ganha pontos
-    // Se for hábito ruim: perde pontos
-    const base = (qtd === 4) ? 4 : 3;
+    const base = qtd === 4 ? 4 : 3; // 4 em linha vale 4, 3 em linha vale 3
+
     if (isHealthy(iconIndex)) {
+      // Hábitos saudáveis somam
       score += base;
     } else {
+      // Hábitos ruins tiram
       score -= base;
     }
 
     scoreDisplay.innerHTML = score;
 
-    // Limpa os quadrados
+    // Limpa peças
     indices.forEach(index => {
       squares[index].style.backgroundImage = "";
       squares[index].dataset.iconIndex = "";
     });
   }
 
+  // Checagens
   function checkRowForFour() {
     for (let i = 0; i < 60; i++) {
       if (i % width >= width - 3) continue;
@@ -211,6 +220,7 @@ function candyCrushGame() {
     }
   }
 
+  // Loop principal
   function gameLoop() {
     checkRowForFour();
     checkColumnForFour();
@@ -225,7 +235,6 @@ function candyCrushGame() {
     modeSelection.style.display = "none";
     grid.style.display = "flex";
     document.querySelector(".scoreBoard").style.display = "flex";
-
     createBoard();
     score = 0;
     scoreDisplay.innerHTML = score;
@@ -234,7 +243,7 @@ function candyCrushGame() {
     gameInterval = setInterval(gameLoop, 100);
 
     if (mode === "timed") {
-      timeLeft = 120;
+      timeLeft = 120; // 2 minutos
       updateTimerDisplay();
       if (timerInterval) clearInterval(timerInterval);
       timerInterval = setInterval(() => {
@@ -251,22 +260,27 @@ function candyCrushGame() {
     }
   }
 
+  // Timer
   function updateTimerDisplay() {
     if (currentMode === "timed") {
       const minutes = Math.floor(timeLeft / 60);
       const seconds = timeLeft % 60;
-      timerDisplay.innerHTML = `Tempo restante: ${minutes}:${seconds.toString().padStart(2, "0")}`;
+      timerDisplay.innerHTML = `Tempo restante: ${minutes}:${seconds
+        .toString()
+        .padStart(2, "0")}`;
     } else {
       timerDisplay.innerHTML = "";
     }
   }
 
+  // Fim do jogo (modo cronometrado)
   function endGame() {
     clearInterval(gameInterval);
     squares.forEach(square => square.setAttribute("draggable", false));
     alert(`Fim do tempo! Sua pontuação foi: ${score}`);
   }
 
+  // Trocar modo
   function changeMode() {
     clearInterval(gameInterval);
     if (timerInterval) clearInterval(timerInterval);
@@ -275,6 +289,7 @@ function candyCrushGame() {
     modeSelection.style.display = "flex";
   }
 
+  // Eventos de clique nos botões
   endlessButton.addEventListener("click", () => startGame("endless"));
   timedButton.addEventListener("click", () => startGame("timed"));
   changeModeButton.addEventListener("click", changeMode);
